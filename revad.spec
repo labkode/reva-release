@@ -4,7 +4,7 @@
 
 Name: revad
 Summary: REVA for CERNBox
-Version: 0.0.34
+Version: 0.0.35
 Release: 1%{?dist}
 License: AGPLv3
 BuildRoot: %{_tmppath}/%{name}-buildroot
@@ -45,6 +45,8 @@ rm -rf %buildroot/
 
 
 %changelog
+* Wed Apr 12 2023 cernbox-admins[bot] <cernbox-admins@cern.ch> 0.0.35
+- v0.0.35
 * Tue Apr 11 2023 cernbox-admins[bot] <cernbox-admins@cern.ch> 0.0.34
 - v0.0.34
 * Tue Apr 11 2023 cernbox-admins[bot] <cernbox-admins@cern.ch> 0.0.33
