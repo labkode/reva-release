@@ -14,13 +14,17 @@ jobs:
       contents: write
     container: ${{ matrix.container }}
     steps:
-      - name: Install build infrastructure
-        run: |
-          yum install -y golang make libcephfs-devel libcephfs2
       - name: Checkout release repository
         uses: actions/checkout@v3
         with:
           path: reva-release
+      - name: Install build infrastructure
+        run: |
+          source /etc/os-release
+          cat reva-release/ceph.repo.in | sed "s/OSMAJOR/$(echo $VERSION_ID | cut -c1)/" > /etc/yum.repos.d/ceph.repo
+          [[ "$(echo $VERSION_ID | cut -c1)" == "8" ]] && yum install -y yum-plugin-priorities
+          yum clean all
+          yum install -y golang make libcephfs-devel
       - name: Bump version in spec file
         run: |
           cd reva-release
