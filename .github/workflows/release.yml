@@ -3,13 +3,20 @@ name: Build and release
 on: workflow_dispatch
 
 jobs:
-  release:
+  build:
     name: Release
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        container: [cern/cc7-base, cern/alma8-base]
     permissions:
       contents: write
-    container: golang:1.20
+    container: ${{ matrix.container }}
     steps:
+      - name: Install build infrastructure
+        run: |
+          yum install -y golang make libcephfs-devel libcephfs2
       - name: Checkout release repository
         uses: actions/checkout@v3
         with:
@@ -19,7 +26,6 @@ jobs:
           cd reva-release
           go run prepare_release.go -author "cernbox-admins[bot]" -email "cernbox-admins@cern.ch"
           echo "version=$(awk '$1 == "Version:" {print $2}' revad.spec)" >> $GITHUB_ENV
-
       - name: Checkout reva repository
         uses: actions/checkout@v3
         with:
@@ -31,15 +37,30 @@ jobs:
           cp reva-release/revad.spec reva/revad.spec
       - name: Create reva RPM
         run: |
-          mkdir release
-          apt update && apt install -y rpm
           cd reva
           make -f Makefile.rpm rpm
-          cp revad-${{ env.version }}-1.x86_64.rpm ../release/revad-${{ env.version }}.rpm
+          mkdir release
+          mv cernbox-revad*.rpm ../release/
         env:
           CGO_ENABLED: 1
           STATIC: 1
-      - name: Push version
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: false
+          prerelease: false
+          files: release/cernbox-revad*.rpm
+          name: Version ${{ env.version }}
+          tag_name: v${{ env.version }}
+  
+  reporelease:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container: golang:1.20
+    steps:
+      - name: Push version to repo
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           repository: reva-release
@@ -48,11 +69,3 @@ jobs:
           commit_user_name: CERNBox Admins Bot
           commit_user_email: cernbox-admins@cern.ch
           tagging_message: v${{ env.version }}
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          draft: false
-          prerelease: false
-          files: release/revad-${{ env.version }}.rpm
-          name: Version ${{ env.version }}
-          tag_name: v${{ env.version }}
