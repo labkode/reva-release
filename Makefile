@@ -8,7 +8,6 @@ rpmbuild = ${shell pwd}/build
 clean:
 	@rm -rf $(PACKAGE)-$(VERSION)
 	@rm -rf $(rpmbuild)
-	@rm -rf *rpm
 
 rpmdefines=--define='_topdir ${rpmbuild}' \
         --define='_sourcedir %{_topdir}/SOURCES' \
