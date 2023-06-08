@@ -1,5 +1,5 @@
 FILES_TO_RPM = cmd/revad/revad cmd/revad/revad-ceph
-SPECFILE = $(shell find . -type f -name *.spec)
+SPECFILE = $(shell find . -maxdepth 1 -type f -name *.spec)
 PACKAGE  = $(shell awk '$$1 == "Name:"     { print $$2 }' $(SPECFILE) )
 VERSION  = $(shell awk '$$1 == "Version:"  { print $$2 }' $(SPECFILE) )
 RELEASE  = $(shell awk '$$1 == "Release:"  { print $$2 }' $(SPECFILE) )
