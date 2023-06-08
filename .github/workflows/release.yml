@@ -48,6 +48,7 @@ jobs:
           cp reva-release/revad.spec reva/revad.spec
       - name: Create reva RPM
         run: |
+          rm -rf ~/.cache/go-build
           cd reva
           make -f Makefile.rpm rpm
           mkdir release
