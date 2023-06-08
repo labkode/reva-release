@@ -2,10 +2,8 @@
 # revad spec file containing two RPMs
 #
 
-%package -n cernbox-revad
-Name: revad
-Summary: REVA for CERNBox
-Conflicts: cernbox-revad-ceph
+Name: cernbox-revad
+Summary: Reva for CERNBox
 Version: 0.0.41
 Release: 1%{?dist}
 License: AGPLv3
@@ -13,16 +11,18 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 Group: CERN-IT/ST
 ExclusiveArch: x86_64
 Source: %{name}-%{version}.tar.gz
+Conflicts: cernbox-revad-ceph
+RemovePathPostfixes: .regular
 
 %description -n cernbox-revad
 This RPM provides REVA for CERNBox, built from github.com/cernbox/reva
 
 %package -n cernbox-revad-ceph
-Name: revad-ceph
-Summary: REVA for CERNBox with Ceph support
+Summary: Reva for CERNBox with Ceph support
 Conflicts: cernbox-revad
 BuildRequires: libcephfs-devel
 BuildRequires: libcephfs2
+RemovePathPostfixes: .ceph
 
 %description -n cernbox-revad-ceph
 This RPM provides REVA for CERNBox with Ceph support, built from github.com/cernbox/reva
@@ -33,32 +33,32 @@ This RPM provides REVA for CERNBox with Ceph support, built from github.com/cern
 %prep
 %setup -n %{name}-%{version}
 
-%install -n cernbox-revad
+%install
 rm -rf %buildroot/
 mkdir -p %buildroot/usr/bin
 mkdir -p %buildroot/etc/revad
 mkdir -p %buildroot/var/log/revad
 mkdir -p %buildroot/var/run/revad
-install -m 755 revad %buildroot/usr/bin/revad
-
-%install -n cernbox-revad-cephfs
-rm -rf %buildroot/
-mkdir -p %buildroot/usr/bin
-mkdir -p %buildroot/etc/revad
-mkdir -p %buildroot/var/log/revad
-mkdir -p %buildroot/var/run/revad
-install -m 755 revad-cephfs %buildroot/usr/bin/revad
+install -m 755 revad %buildroot/usr/bin/revad.regular
+install -m 755 revad-ceph %buildroot/usr/bin/revad.ceph
 
 %preun
 
 %post
 
-%files
+%files -n cernbox-revad
 %defattr(-,root,root,-)
 /etc/revad
 /var/log/revad
 /var/run/revad
-/usr/bin/revad
+/usr/bin/revad.regular
+
+%files -n cernbox-revad-ceph
+%defattr(-,root,root,-)
+/etc/revad
+/var/log/revad
+/var/run/revad
+/usr/bin/revad.ceph
 
 %clean
 rm -rf %buildroot/
