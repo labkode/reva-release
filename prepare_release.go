@@ -33,12 +33,14 @@ import (
 )
 
 var (
-	author = flag.String("author", "", "the author that creates the release")
-	email  = flag.String("email", "", "the email of the authot that creates the release")
+	author     = flag.String("author", "", "the author that creates the release")
+	email      = flag.String("email", "", "the email of the authot that creates the release")
+	versionTag = flag.String("version-tag", "", "the tag of the version")
 )
 
 const (
-	specFile = "revad.spec"
+	specFile   = "revad.spec"
+	prodBranch = "cernbox"
 )
 
 func init() {
@@ -66,6 +68,9 @@ func releaseNewVersion(author, email string) error {
 
 	version := getVersion(specContent) + 1
 	versionStr := fmt.Sprintf("0.0.%d", version)
+	if *versionTag != "" && *versionTag != prodBranch {
+		versionStr += "." + *versionTag
+	}
 
 	// update the version in the spec file
 	for i, line := range specContent {
