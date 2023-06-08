@@ -12,7 +12,6 @@ Group: CERN-IT/ST
 ExclusiveArch: x86_64
 Source: %{name}-%{version}.tar.gz
 Conflicts: cernbox-revad-ceph
-RemovePathPostfixes: .regular
 
 %description -n cernbox-revad
 This RPM provides REVA for CERNBox, built from github.com/cernbox/reva
@@ -39,7 +38,7 @@ mkdir -p %buildroot/usr/bin
 mkdir -p %buildroot/etc/revad
 mkdir -p %buildroot/var/log/revad
 mkdir -p %buildroot/var/run/revad
-install -m 755 revad %buildroot/usr/bin/revad.regular
+install -m 755 revad %buildroot/usr/bin/revad
 install -m 755 revad-ceph %buildroot/usr/bin/revad.ceph
 
 %preun
