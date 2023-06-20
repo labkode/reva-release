@@ -50,7 +50,7 @@ install -m 755 revad-ceph %buildroot/usr/bin/revad.ceph
 /etc/revad
 /var/log/revad
 /var/run/revad
-/usr/bin/revad.regular
+/usr/bin/revad
 
 %files -n cernbox-revad-ceph
 %defattr(-,root,root,-)

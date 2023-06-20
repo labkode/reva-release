@@ -51,8 +51,8 @@ jobs:
           rm -rf ~/.cache/go-build
           cd reva
           make -f Makefile.rpm rpm
-          mkdir release
-          mv cernbox-revad*.rpm ../release/
+          mkdir /release
+          mv cernbox-revad*.rpm /release/
         env:
           CGO_ENABLED: 1
           STATIC: 1
