@@ -34,7 +34,7 @@ jobs:
       - name: Bump version in spec file
         run: |
           cd reva-release
-          go run prepare_release.go -author "cernbox-admins[bot]" -email "cernbox-admins@cern.ch" -version-tag ${{ inputs.branch }}
+          go run prepare_release.go -author "cernbox-admins[bot]" -email "cernbox-admins@cern.ch"
           echo "version=$(awk '$1 == "Version:" {print $2}' revad.spec)" >> $GITHUB_ENV
       - name: Checkout reva repository
         uses: actions/checkout@v3
