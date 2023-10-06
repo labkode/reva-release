@@ -48,7 +48,7 @@ jobs:
           cp reva-release/revad.spec reva/revad.spec
       - name: Create reva RPM
         run: |
-          rpm -a | grep -i ceph
+          rpm -a
           go env
           rm -rf ~/.cache/go-build
           cd reva
